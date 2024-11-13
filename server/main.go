@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"net/http"
+)
 
 func main(){
-	fmt.Println("Test")
+	router := http.NewServeMux()
+	
+	server := http.Server{
+		Addr: ":8080",
+		Handler: router,
+	}
+	server.ListenAndServe()
 }
