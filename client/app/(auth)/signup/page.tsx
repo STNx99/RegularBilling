@@ -11,11 +11,11 @@ export default function SignupPage() {
     <div className="bg-gray-50 flex items-center justify-center min-h-screen">
       <div className="bg-white rounded-lg shadow-lg flex max-w-4xl">
         <div className="hidden md:flex flex-col items-center justify-center bg-blue-100 p-10 rounded-l-lg">
-          {/* <img
+          <img
             src="/favicon.ico"
             alt="Regular Billing Illustration"
             className="w-60"
-          /> */}
+          />
         </div>
 
         <div className="flex-1 p-8">
@@ -72,7 +72,8 @@ export default function SignupPage() {
                       strokeWidth="1.5"
                       stroke="currentColor"
                       className="w-6 select-none cursor-pointer absolute top-1.5 right-2"
-                      tabIndex='-1'
+
+                      tabIndex="-1"
                     >
                       <path
                         strokeLinecap="round"
@@ -122,6 +123,7 @@ export default function SignupPage() {
             <div className="inline-flex items-center">
               <i className="fas fa-home mr-2 mb-1"></i>I agree to abide by
               templatana s Terms of Service and its Privacy Policy
+
             </div>
           </div>
         </div>
