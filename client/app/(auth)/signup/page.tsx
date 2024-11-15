@@ -72,6 +72,7 @@ export default function SignupPage() {
                       strokeWidth="1.5"
                       stroke="currentColor"
                       className="w-6 select-none cursor-pointer absolute top-1.5 right-2"
+
                       tabIndex="-1"
                     >
                       <path
@@ -121,7 +122,8 @@ export default function SignupPage() {
           <div className="text-xs mt-6 text-center text-blue-500">
             <div className="inline-flex items-center">
               <i className="fas fa-home mr-2 mb-1"></i>I agree to abide by
-              templatana's Terms of Service and its Privacy Policy
+              templatana s Terms of Service and its Privacy Policy
+
             </div>
           </div>
         </div>

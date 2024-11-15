@@ -121,7 +121,7 @@ export default function Login() {
           <div className="text-xs mt-6 text-center text-blue-500">
             <div className="inline-flex items-center">
               <i className="fas fa-home mr-2 mb-1"></i>I agree to abide by
-              templatana's Terms of Service and its Privacy Policy
+              templatana s Terms of Service and its Privacy Policy
             </div>
           </div>
         </div>

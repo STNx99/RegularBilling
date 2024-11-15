@@ -1,5 +1,7 @@
+import React from 'react'
 import Link from "next/link";
-import Login from "./account/login";
+// import Login from '../(auth)/login/page';
+
 import "../globals.css";
 export default function Home() {
   return (
@@ -12,6 +14,10 @@ export default function Home() {
       <br />
       <Link href="/signup" className="text-red-500">
         Go to Sign Up
+      </Link>
+      <br />
+      <Link href="/mainpage" className="text-red-500">
+        Go to Main page
       </Link>
     </div>
   );
