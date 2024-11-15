@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"server/components/provider/jwt"
+	"server/models"
 	"server/storage/userstore"
 	"time"
 )
@@ -18,7 +19,7 @@ func NewHandler(store userstore.MongoStore) *Handler {
 }
 
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request){
-	var user User
+	var user models.User
 
 	defer r.Body.Close()
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -31,9 +32,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request){
 		http.Error(w, "No user found" + err.Error(),  http.StatusUnauthorized)
 		return
 	}
-	userStoreUser := UserToStoreUser(user)
 
-	tokenString, err  := jwt.IssuesToken(userStoreUser)
+	tokenString, err  := jwt.IssuesToken(user)
 	if err != nil{
 		http.Error(w,  "Error Issuing token:" + err.Error(), http.StatusInternalServerError)
 	}
@@ -45,7 +45,7 @@ func (h *Handler) Logout(w http.ResponseWriter, r *http.Request){
 
 }
 func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request){
-	var user User 
+	var user models.User 
 	defer r.Body.Close()
 
 	err := json.NewDecoder(r.Body).Decode(&user)
@@ -57,10 +57,8 @@ func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request){
 	if err != nil{
 		http.Error(w, "Failed to create user: "+err.Error(), http.StatusInternalServerError)
 	}
-	//convert  from user to storeUser
-	userStoreUser := UserToStoreUser(newUser)
-
-	if err := h.store.CreateUser(&userStoreUser); err != nil {
+	
+	if err := h.store.CreateUser(&user); err != nil {
 		http.Error(w, "Failed to create user: "+err.Error(), http.StatusInternalServerError)
 		return
 	}

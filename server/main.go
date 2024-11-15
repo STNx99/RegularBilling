@@ -39,6 +39,7 @@ func main() {
 		middleware.Logging,
 		// middleware.VerifyJWT,
 	)
+	
 
 	server := http.Server{
 		Addr:    ":8080",

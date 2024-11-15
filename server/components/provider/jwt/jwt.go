@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"server/storage/userstore"
+	"server/models"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -9,7 +9,7 @@ import (
 
 var secretKey = []byte("secret-key")
 
-func IssuesToken(user userstore.User) (string, error) {
+func IssuesToken(user models.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, jwt.MapClaims{
 		"username": user.UserName,
 		"exp": time.Now().Add(time.Hour* 24).Unix(),
