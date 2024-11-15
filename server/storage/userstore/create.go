@@ -25,7 +25,7 @@ type UserStore interface{
 
 func (m *MongoStore) CreateUser(newUser *User) error{
 	coll := m.db.Client().Database("database").Collection("users")
-	existingUser, err := m.FindUser(newUser.Email)
+	existingUser, err := m.CheckUser(newUser.Email)
 	if err == nil && existingUser != nil {
 		return fmt.Errorf("user already exists")
 	}
