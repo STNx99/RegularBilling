@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@radix-ui/react-slot": "^1.1.0",
     "chart.js": "^4.4.6",
     "class-variance-authority": "^0.7.0",
@@ -29,6 +30,14 @@
     "zod": "^3.23.8",
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@reduxjs/toolkit": "^2.3.0",
+=======
+    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@reduxjs/toolkit": "^2.3.0",
+    "client": "file:",
+    "next": "15.0.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+>>>>>>> a70c187132edb84cf51cd7841f124aa2fcdb1fd4
     "react-navigation": "^5.0.0",
     "react-redux": "^9.1.2"
   },

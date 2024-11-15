@@ -34,9 +34,16 @@ func main() {
 	v1 := http.NewServeMux()
 	v1.Handle("/v1/", http.StripPrefix("/v1", routes.UserRoutes(userStore)))
 
+	//middle ware stack
+	stack:= middleware.CreateStack(
+		middleware.Logging,
+		// middleware.VerifyJWT,
+	)
+	
+
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: middleware.Logging(v1),
+		Handler: stack(v1),
 	}
 	fmt.Println("Server is running on port 8080")
 
