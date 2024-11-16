@@ -2,8 +2,8 @@ package routes
 
 import (
 	"net/http"
+	"server/http/user"
 	"server/storage/userstore"
-	"server/user"
 )
 
 func UserRoutes(store *userstore.MongoStore) http.Handler{

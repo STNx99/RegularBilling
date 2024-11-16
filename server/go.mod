@@ -3,6 +3,7 @@ module server
 go 1.23.3
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/joho/godotenv v1.5.1
 	go.mongodb.org/mongo-driver v1.17.1
 	golang.org/x/crypto v0.26.0
@@ -10,7 +11,6 @@ require (
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
-	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
