@@ -6,10 +6,6 @@ import (
 	"server/models"
 )
 
-type UserStore interface{
-	CreateUser(newUser *models.User) error
-}
-
 
 func (m *MongoStore) CreateUser(newUser *models.User) error{
 	coll := m.db.Client().Database("database").Collection("users")

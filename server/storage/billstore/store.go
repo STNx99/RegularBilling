@@ -1,4 +1,4 @@
-package servicestore
+package billstore
 
 
 import "go.mongodb.org/mongo-driver/mongo"
