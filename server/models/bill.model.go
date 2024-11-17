@@ -8,8 +8,7 @@ import (
 type Bill struct {
 	BillId    primitive.ObjectID `bson:"_id"`
 	BillName  string             `bson:"bill_name"`
-	UserId    string             `bson:"user_id"`
-	ServiceIds []primitive.ObjectID `bson:"service_ids"` 
+	UserId    primitive.ObjectID    `bson:"user_id"`
 	Price     float64            `bson:"price"`
 	Paid      bool               `bson:"paid"`
 	Expired   time.Time          `bson:"expired"`

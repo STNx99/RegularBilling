@@ -8,12 +8,13 @@ import (
 
 func UserRoutes(store *userstore.MongoStore) http.Handler{
 	router := http.NewServeMux()
-	handler := user.NewHandler(*store)
+	userHandler := user.NewHandler(*store)
 	// user Handler
-	router.HandleFunc("GET /user", handler.Login)
-	router.HandleFunc("POST /user", handler.SignIn)
-	router.HandleFunc("PUT /user", handler.UpdateUser)
-	router.HandleFunc("DELETE /user", handler.Logout)
+	router.HandleFunc("GET /", userHandler.Login)
+	router.HandleFunc("POST /", userHandler.SignIn)
+	router.HandleFunc("PUT /", userHandler.UpdateUser)
+	router.HandleFunc("DELETE /", userHandler.Logout)
+
 	return router
 	
 }

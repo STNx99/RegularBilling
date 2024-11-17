@@ -21,13 +21,22 @@ func hashPassword(password string) string{
 
 
 func CreateNewUser(newUser *models.User) (error, models.User){
+	if newUser.Bills == nil{
+		newUser.Bills = []models.Bill{}
+	}
+	if newUser.ServiceIds == nil{
+		newUser.ServiceIds = []models.Service{}
+	}
+	userId := primitive.NewObjectID()
 	return nil, models.User{
-		UserId: primitive.NewObjectID(),
+		UserId: userId,
 		UserName: newUser.UserName,
 		Password: hashPassword(newUser.Password),
 		Email: newUser.Email,
 		Credits: 0,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
+		Bills: newUser.Bills,
+		ServiceIds: newUser.ServiceIds,
 	}
 }

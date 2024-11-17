@@ -58,7 +58,7 @@ func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request){
 		http.Error(w, "Failed to create user: "+err.Error(), http.StatusInternalServerError)
 	}
 	
-	if err := h.store.CreateUser(&user); err != nil {
+	if err := h.store.CreateUser(&newUser); err != nil {
 		http.Error(w, "Failed to create user: "+err.Error(), http.StatusInternalServerError)
 		return
 	}

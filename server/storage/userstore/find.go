@@ -35,3 +35,17 @@ func (m *MongoStore) FindUser(email string, password string) (error){
 	}
 	return nil
 }
+func (m *MongoStore) FindAll() ([]models.User, error){
+	coll := m.db.Client().Database("database").Collection("users")
+	var users []models.User
+	
+	cursor, err := coll.Find(context.TODO(), bson.D{})
+
+	if err != nil {
+		return users, err
+	}
+	if err := cursor.All(context.TODO(), &users); err != nil{
+		return users, err
+	}
+	return users, nil
+}
