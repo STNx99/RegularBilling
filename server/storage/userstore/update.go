@@ -5,7 +5,6 @@ import (
 	"server/models"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (m *MongoStore) UpdateUserServices(name string, service models.Service) error {
@@ -20,11 +19,11 @@ func (m *MongoStore) UpdateUserServices(name string, service models.Service) err
 	return nil
 }
 
-func (m *MongoStore) UpdateUserBill(name string, billId primitive.ObjectID) error {
+func (m *MongoStore) UpdateUserBill(name string, bill models.Bill) error {
 	_, err := m.db.Collection("users").UpdateOne(
 		context.TODO(),
 		bson.M{"username": name},
-		bson.M{"$push": bson.M{"bill_ids": billId}},
+		bson.M{"$push": bson.M{"bill_ids": bill}},
 	)
 	if err != nil {
 		return err
