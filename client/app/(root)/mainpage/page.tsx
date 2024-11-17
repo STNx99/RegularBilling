@@ -1,6 +1,7 @@
 import React from 'react'
 import HeaderBox from '@/components/HeaderBox'
 import TotalBalanceBox from '@/components/TotalBalanceBox';
+import AddButton from '@/components/AddButton';
 
 export default function MainPage(){
   const loggedIn = {firstName: 'Bill'};
@@ -9,11 +10,11 @@ export default function MainPage(){
     <section className="home">
       <div className="home-content">
         <header className="home-header">
-          <HeaderBox
+          <HeaderBox 
             type="greeting"
             title="Welcome"
             user={loggedIn?.firstName || 'Guest'}
-            subtext="Access and manage your account"
+            subtext="Access and manage your account and transactions efficiently."
           />
 
           <TotalBalanceBox
@@ -21,6 +22,8 @@ export default function MainPage(){
             totalBanks={1}
             totalCurrentBalance={3000000}
           />
+
+          <AddButton/>
         </header>
       </div>
     </section>
