@@ -8,6 +8,7 @@ import (
 	"server/components/appContext"
 	"server/middleware"
 	"server/routes"
+	"server/smtp"
 
 	"server/storage/servicestore"
 	"server/storage/userstore"
@@ -34,7 +35,7 @@ func main() {
 
 	userStore := userstore.NewMongoStore(appCtx.DB)
 	serviceStore := servicestore.NewMongoStore(appCtx.DB)
-	// smtpStore := smtp.NewMongoStore(appCtx.DB)
+	smtpStore := smtp.NewMongoStore(appCtx.DB)
 
 	v1 := http.NewServeMux()
 	v1.Handle("/v1/user/", http.StripPrefix("/v1", routes.UserRoutes(userStore)))
@@ -55,7 +56,8 @@ func main() {
 	//Calculate the bill price of each customer every month
 	c := cron.New()
 	c.AddFunc("@monthly", func() {
-		fmt.Println("test")
+		smtp.CalculateUserBill(smtpStore)
+		fmt.Println("User bill calculated")
 	})
 	c.Start()
 
