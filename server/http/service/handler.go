@@ -22,7 +22,6 @@ func NewHandler(serviceStore servicestore.MongoStore, userStore userstore.MongoS
 
 func (h *Handler) FindAll(w http.ResponseWriter, r *http.Request) {
 	services, err := h.serviceStore.FindAll()
-
 	if err != nil {
 		http.Error(w, "Error finding services"+err.Error(), http.StatusInternalServerError)
 	}
@@ -36,7 +35,7 @@ func (h *Handler) FindAll(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) Add(w http.ResponseWriter, r *http.Request) {
 	var service models.AddUserService
-
+	defer r.Body.Close()
 	err := json.NewDecoder(r.Body).Decode(&service)
 	if err != nil {
 		http.Error(w, "Invalid input:"+err.Error(), http.StatusBadRequest)
@@ -53,4 +52,18 @@ func (h *Handler) Add(w http.ResponseWriter, r *http.Request) {
 	if err != nil{
 		http.Error(w, "Error adding service" + err.Error(), http.StatusInternalServerError)
 	}
+}
+
+func (h *Handler) Delete(w http.ResponseWriter, r *http.Request){
+	var s  models.DeleteUserService
+	defer r.Body.Close()
+	err := json.NewDecoder(r.Body).Decode(&s)
+	if err != nil{
+		http.Error(w, "Invalid input:"+err.Error(), http.StatusBadRequest)
+	}
+	err = h.userStore.DeleteUSerServices(s.Username, s.Service)
+	if err != nil{
+		http.Error(w, "Error deleting service:"+err.Error(), http.StatusInternalServerError)
+	}
+	w.WriteHeader(http.StatusOK)
 }

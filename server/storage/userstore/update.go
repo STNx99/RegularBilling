@@ -18,6 +18,17 @@ func (m *MongoStore) UpdateUserServices(name string, service models.Service) err
 	}
 	return nil
 }
+func (m *MongoStore) DeleteUSerServices(name string, service models.Service) error {
+	_, err := m.db.Collection("users").UpdateOne(
+		context.TODO(),
+		bson.M{"username": name},
+		bson.M{"$pull": bson.M{"service_ids": service}},
+	)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func (m *MongoStore) UpdateUserBill(name string, bill models.Bill) error {
 	_, err := m.db.Collection("users").UpdateOne(

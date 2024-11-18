@@ -17,3 +17,8 @@ type AddUserService struct {
 	ServiceName string `bson:"service_name"`
 	Username    string `bson:"username"`
 }
+
+type DeleteUserService struct{
+	Username string `bson:"username"`
+	Service Service
+}

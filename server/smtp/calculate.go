@@ -51,6 +51,7 @@ func CalculateUserBill(store *MongoStore) {
 		if err != nil{
 			fmt.Errorf("Error creating bill for %s", newBill.UserId)
 		}
+		//Send mail to the user
 		err = SendMail([]string{user.Email}, total)
 		if err != nil{
 			fmt.Errorf("Error sending mail for %s", newBill.UserId)
