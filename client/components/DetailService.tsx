@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 interface DetailServiceProps {
   onSelect: (serviceData: ServiceData) => void;
@@ -14,13 +14,20 @@ interface ServiceData {
 }
 
 const DetailService: React.FC<DetailServiceProps> = ({ onSelect }) => {
-  const [serviceName, setServiceName] = useState<string>('youtube');
+  const [serviceName, setServiceName] = useState<string>("youtube");
   const [price, setPrice] = useState<number>(0);
-  const [duration, setDuration] = useState<string>('1 tháng');
-  const [registrationDate, setRegistrationDate] = useState<string>('');
+  const [duration, setDuration] = useState<string>("1 tháng");
+  const [registrationDate, setRegistrationDate] = useState<string>("");
 
-  const serviceOptions = ['youtube', 'spotify', 'netflix', 'zingmp3', 'Xbox game pass', 'FPT play'];
-  const durationOptions = ['1 tháng', '3 tháng', '6 tháng', '12 tháng'];
+  const serviceOptions = [
+    "youtube",
+    "spotify",
+    "netflix",
+    "zingmp3",
+    "Xbox game pass",
+    "FPT play",
+  ];
+  const durationOptions = ["1 tháng", "3 tháng", "6 tháng", "12 tháng"];
 
   const handleSubmit = () => {
     const serviceData: ServiceData = {
@@ -33,12 +40,14 @@ const DetailService: React.FC<DetailServiceProps> = ({ onSelect }) => {
   };
 
   return (
-    <div className="p-4 bg-white border rounded-lg shadow-md w-80">
+    <div className="p-4 bg-white border rounded-lg shadow-md w-full">
       <h2 className="text-xl font-semibold text-center mb-4">Thêm dịch vụ</h2>
       <hr className="mb-4" />
 
       <div className="mb-4">
-        <label htmlFor="serviceName" className="block text-gray-700">Chọn tên dịch vụ</label>
+        <label htmlFor="serviceName" className="block text-gray-700">
+          Chọn tên dịch vụ
+        </label>
         <select
           id="serviceName"
           value={serviceName}
@@ -46,13 +55,17 @@ const DetailService: React.FC<DetailServiceProps> = ({ onSelect }) => {
           className="w-full p-2 border border-gray-300 rounded mt-1"
         >
           {serviceOptions.map((option, index) => (
-            <option key={index} value={option}>{option}</option>
+            <option key={index} value={option}>
+              {option}
+            </option>
           ))}
         </select>
       </div>
 
       <div className="mb-4">
-        <label htmlFor="price" className="block text-gray-700">Giá dịch vụ</label>
+        <label htmlFor="price" className="block text-gray-700">
+          Giá dịch vụ
+        </label>
         <input
           id="price"
           type="number"
@@ -64,7 +77,9 @@ const DetailService: React.FC<DetailServiceProps> = ({ onSelect }) => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="duration" className="block text-gray-700">Thời hạn gói đăng ký</label>
+        <label htmlFor="duration" className="block text-gray-700">
+          Thời hạn gói đăng ký
+        </label>
         <select
           id="duration"
           value={duration}
@@ -72,13 +87,17 @@ const DetailService: React.FC<DetailServiceProps> = ({ onSelect }) => {
           className="w-full p-2 border border-gray-300 rounded mt-1"
         >
           {durationOptions.map((option, index) => (
-            <option key={index} value={option}>{option}</option>
+            <option key={index} value={option}>
+              {option}
+            </option>
           ))}
         </select>
       </div>
 
       <div className="mb-4">
-        <label htmlFor="registrationDate" className="block text-gray-700">Ngày đăng ký dịch vụ</label>
+        <label htmlFor="registrationDate" className="block text-gray-700">
+          Ngày đăng ký dịch vụ
+        </label>
         <input
           id="registrationDate"
           type="date"
