@@ -56,7 +56,7 @@ func main() {
 
 	//Calculate the bill price of each customer every month
 	c := cron.New()
-	c.AddFunc("@monthly", func() {
+	c.AddFunc("@every 10s", func() {
 		smtp.CalculateUserBill(smtpStore)
 		fmt.Println("User bill calculated")
 	})
