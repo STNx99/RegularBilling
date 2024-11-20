@@ -119,7 +119,7 @@ func (m *MongoStore) FindUserBill(user *models.User) ([]models.Bill, error) {
             billsInCurrentYear = append(billsInCurrentYear, bill)
         }
 	}
-
+	log.Println(billsInCurrentYear)
 	return billsInCurrentYear, nil
 }
 
