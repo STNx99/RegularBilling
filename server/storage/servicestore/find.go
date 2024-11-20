@@ -70,6 +70,7 @@ func (m *MongoStore) FindServicePrice(serviceId primitive.ObjectID) (float64, er
 	return price, nil
 }
 
+
 func (m *MongoStore) FindAll() ([]models.Service, error) {
 	var services []models.Service
 	coll := m.db.Collection("services")

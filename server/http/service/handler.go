@@ -52,6 +52,7 @@ func (h *Handler) Add(w http.ResponseWriter, r *http.Request) {
 	if err != nil{
 		http.Error(w, "Error adding service" + err.Error(), http.StatusInternalServerError)
 	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func (h *Handler) Delete(w http.ResponseWriter, r *http.Request){
@@ -65,5 +66,36 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request){
 	if err != nil{
 		http.Error(w, "Error deleting service:"+err.Error(), http.StatusInternalServerError)
 	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) FindUserService(w http.ResponseWriter, r *http.Request) {
+	var user models.User
+	defer r.Body.Close()
+
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		http.Error(w, "Invalid input: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	services, err := h.userStore.FindUserServices(&user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+
+	if services == nil {
+		services = []models.Service{}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	err = json.NewEncoder(w).Encode(services)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 }

@@ -3,7 +3,9 @@ package userstore
 import (
 	"context"
 	"fmt"
+	"log"
 	"server/models"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -81,3 +83,43 @@ func (m *MongoStore) FindAll() ([]models.User, error){
 	}
 	return users, nil
 }
+
+func (m *MongoStore) FindUserServices(user *models.User) ([]models.Service, error) {
+	var foundUser models.User
+	coll := m.db.Collection("users")
+
+	err := coll.FindOne(context.TODO(), bson.D{{Key: "username", Value: user.UserName}}).Decode(&foundUser)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			log.Println("User not found")
+		}
+		return nil, err
+	}
+
+	return foundUser.ServiceIds, nil
+}
+
+func (m *MongoStore) FindUserBill(user *models.User) ([]models.Bill, error) {
+	var foundUser models.User
+	coll := m.db.Collection("users")
+
+	err := coll.FindOne(context.TODO(), bson.D{{Key: "username", Value: user.UserName}}).Decode(&foundUser)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			log.Println("User not found")
+		}
+		return nil, err
+	}
+	currentTime := time.Now()
+	currentYear, _, _ := currentTime.Date()
+	var billsInCurrentYear []models.Bill
+	for _, bill := range foundUser.Bills {
+		billYear, _, _ := bill.CreatedAt.Date()
+		if billYear == currentYear  {
+            billsInCurrentYear = append(billsInCurrentYear, bill)
+        }
+	}
+
+	return billsInCurrentYear, nil
+}
+
