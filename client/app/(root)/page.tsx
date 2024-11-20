@@ -5,6 +5,7 @@ import TotalBalanceBox from "@/components/TotalBalanceBox";
 import Navbar from "@/components/ui/navbar";
 import Wallet from "@/components/Wallet";
 import "../globals.css";
+import DetailService from "@/components/DetailService";
 
 export default function Home() {
   const loggedIn = { firstName: "Bill" };
@@ -44,8 +45,9 @@ export default function Home() {
 
           <div className="w-100% p-8 bg-gray-50 flex flex-col rounded-lg">
             <h1 className="flex justify-center text-3xl font-bold text-gray-800 py-8 ">
-              Your Subscriptions
+              Your Service (Registered)
             </h1>
+            <DetailService/>
           </div>
         </div>
       </div>
