@@ -14,6 +14,7 @@ func ServiceRoutes(serviceStore *servicestore.MongoStore, userStore *userstore.M
 	router.HandleFunc("GET /", serviceHandler.FindUserService)
 	router.HandleFunc("POST /", serviceHandler.Add)
 	router.HandleFunc("DELETE /", serviceHandler.Delete)
+	router.HandleFunc("UPDATE /", serviceHandler.Update)
 
 	return router
 

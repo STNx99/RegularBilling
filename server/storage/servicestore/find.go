@@ -15,7 +15,7 @@ func (m *MongoStore) FindService(s models.AddUserService) (models.Service, error
 	var foundService models.Service
 	err := coll.FindOne(context.TODO(), bson.D{
 		{Key: "service_name", Value: bson.D{
-			{Key: "$regex", Value: s.ServiceName},
+			{Key: "$regex", Value: s.Service.ServiceName},
 			{Key: "$options", Value: "i"},
 		}},
 	}).Decode(&foundService)

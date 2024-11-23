@@ -11,14 +11,15 @@ type Service struct {
 	ServiceName string             `bson:"service_name"`
 	Price       float32            `bson:"price"`
 	CreatedAt   time.Time          `bson:"created_at"`
+	ExpireAt    time.Time          `bson:"expire_at"`
 }
 
 type AddUserService struct {
-	ServiceName string `bson:"service_name"`
-	Username    string `bson:"username"`
+	Username string `bson:"username"`
+	Service  Service
 }
 
-type DeleteUserService struct{
+type DeleteUserService struct {
 	Username string `bson:"username"`
-	Service Service
+	Service  Service
 }
