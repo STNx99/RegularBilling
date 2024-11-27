@@ -3,17 +3,21 @@
 import React, { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const backendUrl = "http://localhost:8080";
+  const router = useRouter();
+  const backendUrl = "http://localhost:8080/v1/user";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
+    setErrorMessage("");
     try {
       const response = await fetch(`${backendUrl}/login`, {
         method: "POST",
@@ -22,42 +26,56 @@ export default function Login() {
         },
         body: JSON.stringify({ email, password }),
       });
-
+  
       if (!response.ok) {
-        const errorData = await response.json();
-        setErrorMessage(errorData.message || "Login failed");
+        const responseClone = response.clone();
+        let errorMessage = "Login failed"; 
+  
+        try {
+          const errorData = await responseClone.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          errorMessage = await responseClone.text();
+        }
+  
+        setErrorMessage(errorMessage || "Unknown error occurred");
         return;
       }
-
+  
       const data = await response.json();
-      console.log("Login successful:", data);
-
-      localStorage.setItem("token", data.token);
-
-      window.location.href = "/dashboard";
-    } catch (error) {
-      console.error("Error during login:", error);
-      setErrorMessage("An error occurred during login");
+  
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("isLoggedIn", "true");
+        router.push("/dashboard");
+      } else {
+        setErrorMessage(data.message || "Invalid credentials");
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error during login:", error.message);
+        setErrorMessage(error.message);
+      } else {
+        console.error("Unexpected error:", error);
+        setErrorMessage("An unknown error occurred");
+      }
     }
   };
-
   
 
   return (
     <div className="bg-gray-50 flex items-center justify-center min-h-screen">
       <div className="bg-white rounded-lg shadow-lg flex max-w-4xl">
-        <div className="hidden md:flex flex-col items-center justify-center bg-blue-100 p-10 rounded-l-lg">
-          {/* <img
-            src="/favicon.ico"
-            alt="Regular Billing Illustration"
-            className="w-60"
-          /> */}
-        </div>
+        <div className="hidden md:flex flex-col items-center justify-center bg-blue-100 p-10 rounded-l-lg"></div>
 
         <div className="flex-1 p-8">
           <h2 className="text-2xl font-bold text-blue-600 mb-6 text-center">
             Welcome to Regular Billing
           </h2>
+
+          {errorMessage && (
+            <p className="text-red-500 text-center text-sm mb-4">{errorMessage}</p>
+          )}
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -101,7 +119,7 @@ export default function Login() {
                       strokeWidth="1.5"
                       stroke="currentColor"
                       className="w-6 select-none cursor-pointer absolute top-1.5 right-2"
-                      tabIndex="-1"
+                      tabIndex={-1}
                     >
                       <path
                         strokeLinecap="round"
@@ -158,5 +176,3 @@ export default function Login() {
     </div>
   );
 }
-
-
