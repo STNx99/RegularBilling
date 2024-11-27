@@ -1,35 +1,87 @@
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell} from "@nextui-org/react";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
-export default function DetailService() {
+const invoices = [
+  {
+    invoice: "INV001",
+    paymentStatus: "Paid",
+    totalAmount: "$250.00",
+    paymentMethod: "Credit Card",
+  },
+  {
+    invoice: "INV002",
+    paymentStatus: "Pending",
+    totalAmount: "$150.00",
+    paymentMethod: "PayPal",
+  },
+  {
+    invoice: "INV003",
+    paymentStatus: "Unpaid",
+    totalAmount: "$350.00",
+    paymentMethod: "Bank Transfer",
+  },
+  {
+    invoice: "INV004",
+    paymentStatus: "Paid",
+    totalAmount: "$450.00",
+    paymentMethod: "Credit Card",
+  },
+  {
+    invoice: "INV005",
+    paymentStatus: "Paid",
+    totalAmount: "$550.00",
+    paymentMethod: "PayPal",
+  },
+  {
+    invoice: "INV006",
+    paymentStatus: "Pending",
+    totalAmount: "$200.00",
+    paymentMethod: "Bank Transfer",
+  },
+  {
+    invoice: "INV007",
+    paymentStatus: "Unpaid",
+    totalAmount: "$300.00",
+    paymentMethod: "Credit Card",
+  },
+]
+
+export function DetailService() {
   return (
-    <Table className="text-left">
-      <TableHeader className="font-bold">
-        <TableColumn>NAME SERVICE</TableColumn>
-        <TableColumn>DATE REGISTERED</TableColumn>
-        <TableColumn>PRICE</TableColumn>
+    <Table>
+      <TableCaption>A list of your recent invoices.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[100px]">Invoice</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Method</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
+        </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow key="1">
-          <TableCell>Youtube Premium</TableCell>
-          <TableCell>11/11/2024</TableCell>
-          <TableCell>79000</TableCell>
-        </TableRow>
-        <TableRow key="2">
-          <TableCell>Spotify</TableCell>
-          <TableCell>02/11/2024</TableCell>
-          <TableCell>29500</TableCell>
-        </TableRow>
-        <TableRow key="3">
-          <TableCell>Netflixr</TableCell>
-          <TableCell>04/11/2024</TableCell>
-          <TableCell>79000</TableCell>
-        </TableRow>
-        <TableRow key="4">
-          <TableCell>OpenAI</TableCell>
-          <TableCell>01/11/2024</TableCell>
-          <TableCell>250000</TableCell>
-        </TableRow>
+        {invoices.map((invoice) => (
+          <TableRow key={invoice.invoice}>
+            <TableCell className="font-medium">{invoice.invoice}</TableCell>
+            <TableCell>{invoice.paymentStatus}</TableCell>
+            <TableCell>{invoice.paymentMethod}</TableCell>
+            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+          </TableRow>
+        ))}
       </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TableCell colSpan={3}>Total</TableCell>
+          <TableCell className="text-right">$2,500.00</TableCell>
+        </TableRow>
+      </TableFooter>
     </Table>
-  );
+  )
 }

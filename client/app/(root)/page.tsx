@@ -1,14 +1,23 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HeaderBox from "@/components/HeaderBox";
 import TotalBalanceBox from "@/components/TotalBalanceBox";
 import Navbar from "@/components/ui/navbar";
 import Wallet from "@/components/Wallet";
 import "../globals.css";
-import DetailService from "@/components/DetailService";
+import { DetailService } from "@/components/DetailService";
 
 export default function Home() {
-  const loggedIn = { firstName: "Bill" };
+  const [users, setUsers] = useState([]);
+  const backendUrl = "http://localhost:8080";
+  const loggedIn = { firstName: users[0] || "Guest" };
+
+  useEffect(() => {
+    fetch(`${backendUrl}/v1/user`)
+      .then((response) => response.json())
+      .then((data) => setUsers(data))
+      .catch((error) => console.error("Error fetching users:", error));
+  }, [backendUrl]);
 
   const handlePayNow = () => {};
 

@@ -7,22 +7,51 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [, setErrorMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const backendUrl = "http://localhost:8080";
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Email: ", email);
-    console.log("Password: ", password);
+
+    try {
+      const response = await fetch(`${backendUrl}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || "Login failed");
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Login successful:", data);
+
+      localStorage.setItem("token", data.token);
+
+      window.location.href = "/dashboard";
+    } catch (error) {
+      console.error("Error during login:", error);
+      setErrorMessage("An error occurred during login");
+    }
   };
+
+  
 
   return (
     <div className="bg-gray-50 flex items-center justify-center min-h-screen">
       <div className="bg-white rounded-lg shadow-lg flex max-w-4xl">
         <div className="hidden md:flex flex-col items-center justify-center bg-blue-100 p-10 rounded-l-lg">
-          <img
+          {/* <img
             src="/favicon.ico"
             alt="Regular Billing Illustration"
             className="w-60"
-          />
+          /> */}
         </div>
 
         <div className="flex-1 p-8">
@@ -129,3 +158,5 @@ export default function Login() {
     </div>
   );
 }
+
+
