@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"net/http"
+	"server/middleware"
 	"server/models"
 	"server/storage/servicestore"
 	"server/storage/userstore"
@@ -77,14 +78,13 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) FindUserService(w http.ResponseWriter, r *http.Request) {
-	var user models.User
-	defer r.Body.Close()
-
-	err := json.NewDecoder(r.Body).Decode(&user)
+	username, err := middleware.GetUsernameFromContext(r.Context())
 	if err != nil {
-		http.Error(w, "Invalid input: "+err.Error(), http.StatusBadRequest)
+		http.Error(w, "Unauthorized: "+err.Error(), http.StatusUnauthorized)
 		return
 	}
+	user := models.User{UserName: username}
+
 
 	services, err := h.userStore.FindUserServices(&user)
 	if err != nil {

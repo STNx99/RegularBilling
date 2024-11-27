@@ -38,23 +38,23 @@ func main() {
 	serviceStore := servicestore.NewMongoStore(appCtx.DB)
 	smtpStore := smtp.NewMongoStore(appCtx.DB)
 
-	v1 := http.NewServeMux()
-	v1.Handle("/v1/user/", http.StripPrefix("/v1", routes.UserRoutes(userStore)))
-	v1.Handle("/v1/service/", http.StripPrefix("/v1", routes.ServiceRoutes(serviceStore, userStore)))
-	v1.Handle("/v1/bill/", http.StripPrefix("/v1", routes.BillRoutes(userStore)))
-
-	//middle ware stack
 	stack := middleware.CreateStack(
 
 		middleware.Logging,
-		// middleware.VerifyJWT,
+		middleware.VerifyJWT,
 	)
+	v1 := http.NewServeMux()
+	v1.Handle("/v1/user/", middleware.Logging(http.StripPrefix("/v1", routes.UserRoutes(userStore))))
+	v1.Handle("/v1/service/", stack(http.StripPrefix("/v1", routes.ServiceRoutes(serviceStore, userStore))))
+	v1.Handle("/v1/bill/", stack(http.StripPrefix("/v1", routes.BillRoutes(userStore))))
+
+	//middle ware stack
 
 	corsHandler := handlers.CORS(
 		handlers.AllowedOrigins([]string{"http://localhost:3000"}), // Change "*" to your allowed origins
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
-	)(stack(v1))
+	)(v1)
 
 	server := http.Server{
 		Addr:    ":8080",
