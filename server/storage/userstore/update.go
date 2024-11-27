@@ -5,12 +5,13 @@ import (
 	"server/models"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (m *MongoStore) AddUserServices(name string, service models.Service) error {
+func (m *MongoStore) AddUserServices(userId primitive.ObjectID, service models.Service) error {
 	_, err := m.db.Collection("users").UpdateOne(
 		context.TODO(),
-		bson.M{"username": name},
+		bson.M{"_id": userId},
 		bson.M{"$push": bson.M{"service_ids": service}},
 	)
 	if err != nil {
@@ -18,10 +19,10 @@ func (m *MongoStore) AddUserServices(name string, service models.Service) error 
 	}
 	return nil
 }
-func (m *MongoStore) DeleteUSerServices(name string, service models.Service) error {
+func (m *MongoStore) DeleteUSerServices(userId primitive.ObjectID, service models.Service) error {
 	_, err := m.db.Collection("users").UpdateOne(
 		context.TODO(),
-		bson.M{"username": name},
+		bson.M{"_id": userId},
 		bson.M{"$pull": bson.M{"service_ids": service}},
 	)
 	if err != nil {
@@ -30,16 +31,16 @@ func (m *MongoStore) DeleteUSerServices(name string, service models.Service) err
 	return nil
 }
 
-func (m *MongoStore) UpdateUserServices(name string, service models.Service) error {
-	
+func (m *MongoStore) UpdateUserServices(userId primitive.ObjectID, service models.Service) error {
+
 	_, err := m.db.Collection("users").UpdateOne(
 		context.TODO(),
-		bson.M{"username": name, "service_ids._id": service.ServiceId},
+		bson.M{"_id": userId, "service_ids._id": service.ServiceId},
 		bson.M{
 			"$set": bson.M{
 				"service_ids.$.service_name": service.ServiceName,
-				"service_ids.$.price":       service.Price,
-				"service_ids.$.created_at":  service.CreatedAt,
+				"service_ids.$.price":        service.Price,
+				"service_ids.$.created_at":   service.CreatedAt,
 			},
 		},
 	)
@@ -48,7 +49,6 @@ func (m *MongoStore) UpdateUserServices(name string, service models.Service) err
 	}
 	return nil
 }
-
 
 func (m *MongoStore) UpdateUserBill(name string, bill models.Bill) error {
 	_, err := m.db.Collection("users").UpdateOne(

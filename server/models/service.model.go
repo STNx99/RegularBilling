@@ -15,11 +15,11 @@ type Service struct {
 }
 
 type AddUserService struct {
-	Username string `bson:"username"`
+	UserId     primitive.ObjectID `bson:"_id"`
 	Service  Service
 }
 
 type DeleteUserService struct {
-	Username string `bson:"username"`
+	UserId     primitive.ObjectID `bson:"_id"`
 	Service  Service
 }

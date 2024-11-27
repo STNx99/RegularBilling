@@ -43,16 +43,16 @@ func (h *Handler) Add(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid input:"+err.Error(), http.StatusBadRequest)
 		return
 	}
-	newService, err := h.serviceStore.FindService(service)
-	if newService == (models.Service{}) {
-		http.Error(w, err.Error(), http.StatusNotFound)
-		return
-	}
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
-		return
-	}
-	err = h.userStore.AddUserServices(service.Username, newService)
+	// newService, err := h.serviceStore.FindService(service)
+	// if newService == (models.Service{}) {
+	// 	http.Error(w, err.Error(), http.StatusNotFound)
+	// 	return
+	// }
+	// if err != nil {
+	// 	http.Error(w, err.Error(), http.StatusNotFound)
+	// 	return
+	// }
+	err = h.userStore.AddUserServices(service.UserId, service.Service)
 	if err != nil {
 		http.Error(w, "Error adding service"+err.Error(), http.StatusInternalServerError)
 		return
@@ -68,7 +68,7 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid input:"+err.Error(), http.StatusBadRequest)
 		return
 	}
-	err = h.userStore.DeleteUSerServices(s.Username, s.Service)
+	err = h.userStore.DeleteUSerServices(s.UserId, s.Service)
 	if err != nil {
 		http.Error(w, "Error deleting service:"+err.Error(), http.StatusInternalServerError)
 		return
@@ -118,7 +118,7 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 	newService := CreateNewService(&user.Service)
 
-	err = h.userStore.UpdateUserServices(user.Username, *newService)
+	err = h.userStore.UpdateUserServices(user.UserId, *newService)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return

@@ -13,6 +13,7 @@ import (
 	"server/storage/servicestore"
 	"server/storage/userstore"
 
+	"github.com/gorilla/handlers"
 	"github.com/joho/godotenv"
 	"github.com/robfig/cron"
 )
@@ -40,23 +41,30 @@ func main() {
 	v1 := http.NewServeMux()
 	v1.Handle("/v1/user/", http.StripPrefix("/v1", routes.UserRoutes(userStore)))
 	v1.Handle("/v1/service/", http.StripPrefix("/v1", routes.ServiceRoutes(serviceStore, userStore)))
-	v1.Handle("/v1/bill/",http.StripPrefix("/v1",routes.BillRoutes(userStore)))
+	v1.Handle("/v1/bill/", http.StripPrefix("/v1", routes.BillRoutes(userStore)))
 
 	//middle ware stack
 	stack := middleware.CreateStack(
+
 		middleware.Logging,
 		// middleware.VerifyJWT,
 	)
 
+	corsHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{"http://localhost:3000"}), // Change "*" to your allowed origins
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+	)(stack(v1))
+
 	server := http.Server{
 		Addr:    ":8080",
-		Handler: stack(v1),
+		Handler: corsHandler,
 	}
 	fmt.Println("Server is running on port 8080")
 
 	//Calculate the bill price of each customer every month
 	c := cron.New()
-	c.AddFunc("@every 10s", func() {
+	c.AddFunc("@every monthly", func() {
 		smtp.CalculateUserBill(smtpStore)
 		fmt.Println("User bill calculated")
 	})
