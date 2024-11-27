@@ -63,10 +63,12 @@ func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(&newUser)
+	tokenString, err := middleware.IssuesToken(user)
 	if err != nil {
-		http.Error(w, "Failed to encode response: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Error Issuing token:"+err.Error(), http.StatusInternalServerError)
 	}
+	setCookieHandler(w, tokenString)
+	w.WriteHeader(http.StatusOK)
 }
 func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
@@ -74,10 +76,10 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 func setCookieHandler(w http.ResponseWriter, tokenString string) {
 	cookie := http.Cookie{
-		Name:    "token",
-		Value:   tokenString,
-		Expires: time.Now().Add(time.Hour * 24),
-		Path:    "/",
+		Name:     "token",
+		Value:    tokenString,
+		Expires:  time.Now().Add(time.Hour * 24),
+		Path:     "/",
 		HttpOnly: true,
 		Secure:   false,
 		SameSite: http.SameSiteStrictMode,
