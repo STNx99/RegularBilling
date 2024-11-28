@@ -54,6 +54,7 @@ func main() {
 		handlers.AllowedOrigins([]string{"http://localhost:3000"}), // Change "*" to your allowed origins
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+		handlers.AllowCredentials(),
 	)(v1)
 
 	server := http.Server{

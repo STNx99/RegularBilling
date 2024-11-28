@@ -36,12 +36,23 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Error Issuing token:"+err.Error(), http.StatusInternalServerError)
 	}
-	setCookieHandler(w, tokenString)
+	setCookieHandler(w, tokenString, time.Now().Add(time.Hour*24))
+	// cookie := map[string]interface{}{
+	// 	"success": true,
+	// 	"token":   tokenString,
+	// }
+
+	// err = json.NewEncoder(w).Encode(&cookie)
+	// if err != nil {
+	// 	http.Error(w, "Err encoding: "+err.Error(), http.StatusBadRequest)
+	// 	return
+	// }
 	w.WriteHeader(http.StatusOK)
 
 }
 func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
-
+	setCookieHandler(w, "", time.Now().Add(-time.Hour))
+	w.WriteHeader(http.StatusOK)
 }
 func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) {
 	var user models.User
@@ -67,18 +78,18 @@ func (h *Handler) SignIn(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Error Issuing token:"+err.Error(), http.StatusInternalServerError)
 	}
-	setCookieHandler(w, tokenString)
+	setCookieHandler(w, tokenString, time.Now().Add(time.Hour*24))
 	w.WriteHeader(http.StatusOK)
 }
 func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func setCookieHandler(w http.ResponseWriter, tokenString string) {
+func setCookieHandler(w http.ResponseWriter, tokenString string, expTime time.Time) {
 	cookie := http.Cookie{
 		Name:     "token",
 		Value:    tokenString,
-		Expires:  time.Now().Add(time.Hour * 24),
+		Expires:  expTime,
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   false,

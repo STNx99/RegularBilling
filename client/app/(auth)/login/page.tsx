@@ -16,7 +16,7 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     setErrorMessage("");
     try {
       const response = await fetch(`${backendUrl}/login`, {
@@ -26,24 +26,24 @@ export default function Login() {
         },
         body: JSON.stringify({ email, password }),
       });
-  
+
       if (!response.ok) {
         const responseClone = response.clone();
-        let errorMessage = "Login failed"; 
-  
+        let errorMessage = "Login failed";
+
         try {
           const errorData = await responseClone.json();
           errorMessage = errorData.message || errorMessage;
         } catch {
           errorMessage = await responseClone.text();
         }
-  
+
         setErrorMessage(errorMessage || "Unknown error occurred");
         return;
       }
-  
+
       const data = await response.json();
-  
+
       if (data.success) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("isLoggedIn", "true");
@@ -61,7 +61,6 @@ export default function Login() {
       }
     }
   };
-  
 
   return (
     <div className="bg-gray-50 flex items-center justify-center min-h-screen">
@@ -74,7 +73,9 @@ export default function Login() {
           </h2>
 
           {errorMessage && (
-            <p className="text-red-500 text-center text-sm mb-4">{errorMessage}</p>
+            <p className="text-red-500 text-center text-sm mb-4">
+              {errorMessage}
+            </p>
           )}
 
           <form onSubmit={handleSubmit}>
