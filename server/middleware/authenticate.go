@@ -27,6 +27,7 @@ func GetUsernameFromContext(ctx context.Context) (string, error) {
 	}
 	return username, nil
 }
+
 // Initialize secret key either from environment variable or generate a new one
 func init() {
 	secretKeyStr := os.Getenv("JWT_SECRET_KEY")
@@ -96,6 +97,7 @@ func VerifyJWT(next http.Handler) http.Handler {
 		}
 
 		username := claims["username"].(string)
+		log.Println("Username from token:", username)
 
 		ctx := context.WithValue(r.Context(), UserKey, username)
 

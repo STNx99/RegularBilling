@@ -56,18 +56,18 @@ func (m *MongoStore) CheckUserName(name string, coll *mongo.Collection) (*models
 	return &foundUser, nil
 }
 
-func (m *MongoStore) FindUser(email string, password string) (error){
+func (m *MongoStore) FindUser(email string, password string) (*models.User, error){
 	coll := m.db.Collection("users")
 
 	var foundUser models.User
 	err := coll.FindOne(context.TODO(), bson.D{{Key:"email", Value: email}}).Decode(&foundUser)
 	if err != nil{
-		return mongo.ErrNoDocuments
+		return nil, mongo.ErrNoDocuments
 	}
 	if err = bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(password)); err != nil{
-		return err 
+		return nil, err 
 	}
-	return nil
+	return &foundUser, nil
 }
 func (m *MongoStore) FindAll() ([]models.User, error){
 	coll := m.db.Collection("users")
@@ -123,3 +123,13 @@ func (m *MongoStore) FindUserBill(user *models.User) ([]models.Bill, error) {
 	return billsInCurrentYear, nil
 }
 
+func (m *MongoStore) LoggedInUser(username string) (*models.User, error){
+	coll := m.db.Collection("users")
+
+	var foundUser models.User
+	err := coll.FindOne(context.TODO(), bson.D{{Key:"username", Value: username}}).Decode(&foundUser)
+	if err != nil{
+		return nil, mongo.ErrNoDocuments
+	}
+	return &foundUser, nil
+}
