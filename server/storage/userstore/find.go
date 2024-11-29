@@ -67,6 +67,7 @@ func (m *MongoStore) FindUser(email string, password string) (*models.User, erro
 	}
 	if err = bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(password)); err != nil {
 		return nil, err
+
 	}
 	return &foundUser, nil
 }

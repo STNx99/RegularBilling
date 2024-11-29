@@ -28,11 +28,11 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	foundUser, err := h.store.FindUser(user.Email, user.Password)
+
 	if err != nil {
 		http.Error(w, "No user found"+err.Error(), http.StatusUnauthorized)
 		return
 	}
-
 	tokenString, err := middleware.IssuesToken(*foundUser)
 	if err != nil {
 		http.Error(w, "Error Issuing token:"+err.Error(), http.StatusInternalServerError)
