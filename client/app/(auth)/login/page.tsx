@@ -47,7 +47,7 @@ export default function Login() {
       if (data.success) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("isLoggedIn", "true");
-        router.push("/dashboard");
+        router.push("/");
       } else {
         setErrorMessage(data.message || "Invalid credentials");
       }

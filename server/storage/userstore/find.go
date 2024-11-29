@@ -11,28 +11,29 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 )
-func(m *MongoStore) CheckUser(newUser *models.User, coll *mongo.Collection) (bool, error){
+
+func (m *MongoStore) CheckUser(newUser *models.User, coll *mongo.Collection) (bool, error) {
 	exist, err := m.CheckUserMail(newUser.Email, coll)
-	if err != nil{
+	if err != nil {
 		return true, err
 	}
 	if exist != nil {
 		return true, nil
-	} 
+	}
 	exist, err = m.CheckUserName(newUser.UserName, coll)
-	if err != nil{
+	if err != nil {
 		return true, err
 	}
-	if exist != nil{
+	if exist != nil {
 		return true, nil
-	} 
-	
+	}
+
 	return false, nil
 }
 
-func (m *MongoStore) CheckUserMail(email string, coll *mongo.Collection) (*models.User, error)  {
+func (m *MongoStore) CheckUserMail(email string, coll *mongo.Collection) (*models.User, error) {
 	var foundUser models.User
-	err := coll.FindOne(context.TODO(), bson.D{{Key:"email", Value: email}}).Decode(&foundUser)
+	err := coll.FindOne(context.TODO(), bson.D{{Key: "email", Value: email}}).Decode(&foundUser)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, nil
@@ -43,9 +44,9 @@ func (m *MongoStore) CheckUserMail(email string, coll *mongo.Collection) (*model
 	return &foundUser, err
 }
 
-func (m *MongoStore) CheckUserName(name string, coll *mongo.Collection) (*models.User, error){
+func (m *MongoStore) CheckUserName(name string, coll *mongo.Collection) (*models.User, error) {
 	var foundUser models.User
-	err := coll.FindOne(context.TODO(), bson.D{{Key:"username", Value: name}}).Decode(&foundUser)
+	err := coll.FindOne(context.TODO(), bson.D{{Key: "username", Value: name}}).Decode(&foundUser)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, nil
@@ -56,29 +57,29 @@ func (m *MongoStore) CheckUserName(name string, coll *mongo.Collection) (*models
 	return &foundUser, nil
 }
 
-func (m *MongoStore) FindUser(email string, password string) (error){
+func (m *MongoStore) FindUser(email string, password string) (*models.User, error) {
 	coll := m.db.Collection("users")
 
 	var foundUser models.User
-	err := coll.FindOne(context.TODO(), bson.D{{Key:"email", Value: email}}).Decode(&foundUser)
-	if err != nil{
-		return mongo.ErrNoDocuments
+	err := coll.FindOne(context.TODO(), bson.D{{Key: "email", Value: email}}).Decode(&foundUser)
+	if err != nil {
+		return nil, mongo.ErrNoDocuments
 	}
-	if err = bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(password)); err != nil{
-		return err 
+	if err = bcrypt.CompareHashAndPassword([]byte(foundUser.Password), []byte(password)); err != nil {
+		return nil, err
 	}
-	return nil
+	return &foundUser, nil
 }
-func (m *MongoStore) FindAll() ([]models.User, error){
+func (m *MongoStore) FindAll() ([]models.User, error) {
 	coll := m.db.Collection("users")
 	var users []models.User
-	
+
 	cursor, err := coll.Find(context.TODO(), bson.D{})
 
 	if err != nil {
 		return users, err
 	}
-	if err := cursor.All(context.TODO(), &users); err != nil{
+	if err := cursor.All(context.TODO(), &users); err != nil {
 		return users, err
 	}
 	return users, nil
@@ -115,11 +116,21 @@ func (m *MongoStore) FindUserBill(user *models.User) ([]models.Bill, error) {
 	var billsInCurrentYear []models.Bill
 	for _, bill := range foundUser.Bills {
 		billYear, _, _ := bill.CreatedAt.Date()
-		if billYear == currentYear  {
-            billsInCurrentYear = append(billsInCurrentYear, bill)
-        }
+		if billYear == currentYear {
+			billsInCurrentYear = append(billsInCurrentYear, bill)
+		}
 	}
 	log.Println(billsInCurrentYear)
 	return billsInCurrentYear, nil
 }
 
+func (m *MongoStore) LoggedInUser(username string) (*models.User, error) {
+	coll := m.db.Collection("users")
+
+	var foundUser models.User
+	err := coll.FindOne(context.TODO(), bson.D{{Key: "username", Value: username}}).Decode(&foundUser)
+	if err != nil {
+		return nil, mongo.ErrNoDocuments
+	}
+	return &foundUser, nil
+}
