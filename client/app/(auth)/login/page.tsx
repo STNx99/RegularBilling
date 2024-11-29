@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,51 +15,24 @@ export default function Login() {
   const router = useRouter();
   const backendUrl = "http://localhost:8080/v1/user";
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
     setErrorMessage("");
     try {
-      const response = await fetch(`${backendUrl}/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await axios.post(
+        `${backendUrl}/login`,
+        {
+          email: email,
+          password: password,
         },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const responseClone = response.clone();
-        let errorMessage = "Login failed";
-
-        try {
-          const errorData = await responseClone.json();
-          errorMessage = errorData.message || errorMessage;
-        } catch {
-          errorMessage = await responseClone.text();
-        }
-
-        setErrorMessage(errorMessage || "Unknown error occurred");
-        return;
+        { withCredentials: true }
+      );
+      if (response.status === 200) {
+        console.log("Login successful", router.push("/"));
       }
-
-      const data = await response.json();
-
-      if (data.success) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("isLoggedIn", "true");
-        router.push("/");
-      } else {
-        setErrorMessage(data.message || "Invalid credentials");
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("Error during login:", error.message);
-        setErrorMessage(error.message);
-      } else {
-        console.error("Unexpected error:", error);
-        setErrorMessage("An unknown error occurred");
-      }
+    } catch (error) {
+      console.log("Error logging in:", error);
     }
   };
 
