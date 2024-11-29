@@ -1,7 +1,6 @@
 import React from 'react'
 import HeaderBox from '@/components/HeaderBox'
 import TotalBalanceBox from '@/components/TotalBalanceBox';
-import AddButton from '@/components/AddButton';
 
 export default function MainPage(){
   const loggedIn = {firstName: 'Bill'};
@@ -23,7 +22,6 @@ export default function MainPage(){
             totalCurrentBalance={3000000}
           />
 
-          <AddButton/>
         </header>
       </div>
     </section>

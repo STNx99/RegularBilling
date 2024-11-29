@@ -6,23 +6,41 @@ import Navbar from "@/components/ui/navbar";
 import Wallet from "@/components/Wallet";
 import "../globals.css";
 import { DetailService } from "@/components/DetailService";
+import { User } from "@/types/type";
 
-export default function Home() {
-  const [users, setUsers] = useState([]);
-  const backendUrl = "http://localhost:8080";
-  const loggedIn = { firstName: users[0] || "Guest" };
+export default function Home()  {
+  const [user, setUser] = useState<User | null>(null);
+  // const [user, setUser] = useState();
+  const [loggedIn, setLoggedIn] = useState<string>("Guest");
+  const backendUrl = "http://localhost:8080/v1/user";
+  
+  const handleGetUserData = async (): Promise<void> => {
+    const response = await fetch(`${backendUrl}/find`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include', 
+    });
+  
+    const data = await response.json();
+    setUser(data);
+  };
 
   useEffect(() => {
-    fetch(`${backendUrl}/v1/user`)
-      .then((response) => response.json())
-      .then((data) => setUsers(data))
-      .catch((error) => console.error("Error fetching users:", error));
-  }, [backendUrl]);
+    handleGetUserData();
+  },[]);
+
+  useEffect(() => {
+    if (user) {
+      setLoggedIn(user.userName);
+    }
+  }, [user]);
+
+  console.log(user);
 
   const handlePayNow = () => {};
-
   const handleHistory = () => {};
-
   return (
     <section className="home">
       <div className="home-content">
@@ -32,7 +50,7 @@ export default function Home() {
             <HeaderBox
               type="greeting"
               title="Welcome"
-              user={loggedIn?.firstName || "Guest"}
+              user={loggedIn}
               subtext="Access and manage your account"
             />
           </div>
@@ -42,7 +60,7 @@ export default function Home() {
               <TotalBalanceBox
                 accounts={[]}
                 totalBanks={1}
-                totalCurrentBalance={3000000}
+                totalCurrentBalance={0}
               />
               <Wallet
                 balance={70000}
