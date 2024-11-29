@@ -10,8 +10,6 @@ import { User } from "@/types/type";
 
 export default function Home()  {
   const [user, setUser] = useState<User | null>(null);
-  // const [user, setUser] = useState();
-  const [loggedIn, setLoggedIn] = useState<string>("Guest");
   const backendUrl = "http://localhost:8080/v1/user";
   
   const handleGetUserData = async (): Promise<void> => {
@@ -31,13 +29,7 @@ export default function Home()  {
     handleGetUserData();
   },[]);
 
-  useEffect(() => {
-    if (user) {
-      setLoggedIn(user.userName);
-    }
-  }, [user]);
-
-  console.log(user);
+  console.log(user?.UserName);
 
   const handlePayNow = () => {};
   const handleHistory = () => {};
@@ -50,7 +42,7 @@ export default function Home()  {
             <HeaderBox
               type="greeting"
               title="Welcome"
-              user={loggedIn}
+              user={user?.UserName}
               subtext="Access and manage your account"
             />
           </div>
@@ -74,7 +66,7 @@ export default function Home()  {
             <h1 className="flex justify-center text-3xl font-bold text-gray-800 py-8 ">
               Your Service (Registered)
             </h1>
-            <DetailService/>
+            <DetailService />
           </div>
         </div>
       </div>

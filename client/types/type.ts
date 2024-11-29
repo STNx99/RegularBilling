@@ -1,29 +1,31 @@
-export type Example = {
-    id: number;
-    inputText: string;
-    outputText: string;
-    explanation?: string;
-    img?: string;
-  };
-  export type Problem = {
-    id: string;
-    title: string;
-    problemStatement: string;
-    examples: Example[];
-    constraints: string;
-    order: number;
-    starterCode: string;
-    handlerFunction: (fn: any) => any;
-    starterFunctionName: string;
-  };
-  export type DBProblem = {
-    id: string;
-    title: string;
-    category: string;
-    difficulty: string;
-    likes: number;
-    dislikes: number;
-    order: number;
-    videoId?: string;
-    link?: string;
-  };
+import { ObjectId } from "mongodb";
+
+export type User = {
+  UserId: ObjectId;
+  UserName: string;
+  Email: string;
+  Password: string;
+  Credits: number;
+  CreatedAt?: Date;
+  UpdatedAt?: Date;
+  Bills: Bill[];
+  ServiceIds: Service[];
+};
+
+export type Service = {
+  ServiceId: ObjectId;
+  ServiceName: string;
+  Price: number;
+  CreatedAt: Date;
+  ExpireAt: Date;
+};
+
+export type Bill = {
+  BillId: ObjectId;
+  BillName: string;
+  UserId: ObjectId;
+  Price: number;
+  Paid: boolean;
+  Expired: Date;
+  CreatedAt: Date;
+};
