@@ -8,71 +8,57 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-]
+import { Service } from "@/types/type";
+import { useEffect, useState } from "react";
 
 export function DetailService() {
+  const backendUrl = "http://localhost:8080/v1/service/";
+  const [services, setServices] = useState<Service[]>([]); 
+
+  const handleGetService = async(): Promise<void> => {
+    try {
+      const respones = await fetch(`${backendUrl}`,{
+        method: 'GET',
+        credentials: 'include'
+      });
+  
+      const data = await respones.json()
+      console.log(data);
+      if(data){
+        console.log(data);
+        setServices(data);
+      }
+
+
+    } catch (error: unknown) {
+      console.log("Error: ", error);
+    }
+  }
+
+  useEffect(() => {
+    handleGetService();
+  },[]);
+
   return (
     <Table>
       <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="w-[100px]">STT</TableHead>
+          <TableHead>TEN DICH VU</TableHead>
+          <TableHead>NGAY DANG KY</TableHead>
+          <TableHead>NGAY HET HAN</TableHead>
+          <TableHead className="text-right">GIA CA</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+        {services.map((service) => (
+          <TableRow key={service.ServiceId.toString()}>
+            <TableCell className="font-medium">{}</TableCell>
+            <TableCell>{service.ServiceName}</TableCell>
+            <TableCell>{formattedDateTime(service.CreatedAt)}</TableCell>
+            <TableCell>{formattedDateTime(service.ExpireAt)}</TableCell>
+            <TableCell className="text-right">{service.Price}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -84,4 +70,14 @@ export function DetailService() {
       </TableFooter>
     </Table>
   )
+}
+
+
+function formattedDateTime(date: Date | string) : string {
+  const dateObj = typeof date === "string" ?  new Date(date): date;
+  return dateObj.toLocaleString("en-Us", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 }

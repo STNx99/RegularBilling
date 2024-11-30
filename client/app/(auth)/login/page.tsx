@@ -4,19 +4,19 @@ import React, { useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios from "axios"; 
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const router = useRouter();
+
   const backendUrl = "http://localhost:8080/v1/user";
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
-    e.preventDefault();
+    e.preventDefault(); 
 
     setErrorMessage("");
     try {
