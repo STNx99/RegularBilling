@@ -14,7 +14,6 @@ import { useEffect, useState } from "react";
 export function DetailService() {
   const backendUrl = "http://localhost:8080/v1/service/";
   const [services, setServices] = useState<Service[]>([]); 
-
   const handleGetService = async(): Promise<void> => {
     try {
       const respones = await fetch(`${backendUrl}`,{
@@ -45,16 +44,16 @@ export function DetailService() {
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px]">STT</TableHead>
-          <TableHead>TEN DICH VU</TableHead>
-          <TableHead>NGAY DANG KY</TableHead>
-          <TableHead>NGAY HET HAN</TableHead>
-          <TableHead className="text-right">GIA CA</TableHead>
+          <TableHead>SERVICE NAME</TableHead>
+          <TableHead>CREATE DATE</TableHead>
+          <TableHead>EXPIRATION DATE</TableHead>
+          <TableHead className="text-right">PRICE</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {services.map((service) => (
+        {services.map((service,index) => (
           <TableRow key={service.ServiceId.toString()}>
-            <TableCell className="font-medium">{}</TableCell>
+            <TableCell className="font-medium">{index+1}</TableCell>
             <TableCell>{service.ServiceName}</TableCell>
             <TableCell>{formattedDateTime(service.CreatedAt)}</TableCell>
             <TableCell>{formattedDateTime(service.ExpireAt)}</TableCell>

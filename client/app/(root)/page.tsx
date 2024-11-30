@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import HeaderBox from "@/components/HeaderBox";
 import TotalBalanceBox from "@/components/TotalBalanceBox";
 import Navbar from "@/components/ui/navbar";
-import Wallet from "@/components/Wallet";
+// import Wallet from "@/components/Wallet";
 import "../globals.css";
 import { DetailService } from "@/components/DetailService";
-import { Bill, BillData, User } from "@/types/type";
+import { BillData, User } from "@/types/type";
 import LineChartComponent from "@/components/LineChart";
 import { useRouter } from "next/navigation";
 
@@ -29,31 +29,39 @@ export default function Home() {
       const data = await response.json();
       setUser(data);
     } catch (error) {
+      console.log("Error : ", error);
       router.push("/login");
     }
   };
 
   const handleGetChartData = async (): Promise<void> => {
-    const response = await fetch(`${backendUrl}/bill`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    try {
+      const response = await fetch(`${backendUrl}/bill/`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+  
+      const data = await response.json();
+  
+      setChartData(data);
 
-    const data = await response.json();
-
-    setChartData(data);
+    } catch (error){
+      console.log("Error: ", error)
+    }
+    
   };
 
   useEffect(() => {
-    handleGetUserData();
     handleGetChartData();
+    handleGetUserData();
+    
   }, []);
 
-  const handlePayNow = () => {};
-  const handleHistory = () => {};
+  // const handlePayNow = () => {};
+  // const handleHistory = () => {};
   return (
     <section className="home">
       <div className="home-content">
@@ -95,8 +103,4 @@ export default function Home() {
       </div>
     </section>
   );
-}
-
-interface LineChartComponentProps {
-  chartData: Bill[]; // Define the type for the chartData prop
 }

@@ -258,6 +258,10 @@ declare interface  LineChartProps {
   accounts: Account[];
 }
 
+interface LineChartComponentProps {
+  chartData: Bill[]; // Define the type for the chartData prop
+}
+
 declare interface PaymentTransferFormProps {
   accounts: Account[];
 }
