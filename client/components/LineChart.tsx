@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 import {
   Card,
@@ -8,76 +8,97 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { Bill } from "@/types/type"
-const chartData = [
-  { month: "January", price: 186 },
-  { month: "February", price: 305 },
-  { month: "March", price: 237 },
-  { month: "April", price: 73 },
-  { month: "May", price: 209 },
-  { month: "June", price: 214 },
-  { month: "July", price: 100 },
-  { month: "August", price: 200 },
-  { month: "September", price: 500 },
-  { month: "October", price: 50 },
-  { month: "November", price: 200 },
-  { month: "December", price: 200  },
-
-]
+} from "@/components/ui/chart";
+import { Bill } from "@/types/type";
 
 const chartConfig = {
   desktop: {
     label: "Desktop",
     color: "hsl(var(--chart-1))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function LineChartComponent(chartData : Bill[]) {
+interface LineChartProps {
+  chartData: Bill[] | undefined;
+}
+
+const LineChartComponent: React.FC<LineChartProps> = ({ chartData }) => {
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const monthlyData = monthNames.map((month, index) => {
+    const billsForMonth = chartData?.filter((bill) => {
+      const billDate = new Date(bill.Expired);
+      return billDate.getMonth() === index;
+    });
+    const totalPrice =
+      billsForMonth?.reduce((total, bill) => total + bill.Price, 0) || 0;
+
+    return {
+      month: month,
+      totalPrice: totalPrice,
+    };
+  });
+
   return (
     <Card className="w-2/3">
       <CardHeader>
         <CardTitle>Line Chart</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardDescription>January - December 2024</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={monthlyData}
             margin={{
-              left: 12,
-              right: 12,
+              left: 0,
+              right: 20,
             }}
           >
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickLine={true}
+              axisLine={true}
+              tickMargin={12}
+              tickCount={12}
+              tickFormatter={(value) => value}
             />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
             <Line
-              dataKey="price"
+              dataKey="totalPrice"
               type="natural"
               stroke="var(--color-desktop)"
-              strokeWidth={2}
-              dot={false}
+              strokeWidth={3}
+              dot={true}
             />
           </LineChart>
         </ChartContainer>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
+
+export default LineChartComponent;

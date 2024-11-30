@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 
+import { Bill } from "./type";
+
 declare type SearchParamProps = {
   params: { [key: string]: string };
   searchParams: { [key: string]: string | string[] | undefined };
@@ -204,9 +206,9 @@ declare interface BankTabItemProps {
 }
 
 declare interface TotalBalanceBoxProps {
-  accounts: Account[];
+  months: Bill[];
   totalBanks: number;
-  totalCurrentBalance: number;
+  totalCurrentBalance: number | undefined;
 }
 
 declare interface FooterProps {
