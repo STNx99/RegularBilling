@@ -7,26 +7,30 @@ import Wallet from "@/components/Wallet";
 import "../globals.css";
 import { DetailService } from "@/components/DetailService";
 import { Bill, BillData, User } from "@/types/type";
-import { LineChart } from "recharts";
 import LineChartComponent from "@/components/LineChart";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
-  const [loggedIn, setLoggedIn] = useState<string>("Guest");
   const backendUrl = "http://localhost:8080/v1";
   const [chartData, setChartData] = useState<BillData>();
+  const router = useRouter();
 
   const handleGetUserData = async (): Promise<void> => {
-    const response = await fetch(`${backendUrl}/user/find`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    try {
+      const response = await fetch(`${backendUrl}/user/find`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
 
-    const data = await response.json();
-    setUser(data);
+      const data = await response.json();
+      setUser(data);
+    } catch (error) {
+      router.push("/login");
+    }
   };
 
   const handleGetChartData = async (): Promise<void> => {
@@ -39,23 +43,14 @@ export default function Home() {
     });
 
     const data = await response.json();
+
     setChartData(data);
-    console.log('====================================');
-    console.log(data);
-    console.log('====================================');
   };
 
   useEffect(() => {
     handleGetUserData();
     handleGetChartData();
   }, []);
-
-  useEffect(() => {
-    if (user) {
-      setLoggedIn(user?.UserName);
-    }
-  }, [user]);
-
 
   const handlePayNow = () => {};
   const handleHistory = () => {};
@@ -69,7 +64,7 @@ export default function Home() {
             <HeaderBox
               type="greeting"
               title="Welcome"
-              user={loggedIn}
+              user={user?.UserName}
               subtext="Access and manage your account"
             />
           </div>

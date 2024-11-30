@@ -82,7 +82,7 @@ const DoughnutChart: React.FC<DoughNutChartProps> = ({ doughNutData }) => {
               label: (tooltipItem) => {
                 const month = monthTotals[tooltipItem.dataIndex].month;
                 const total = tooltipItem.raw as number;
-                return `${month}: $${total.toFixed(2)}`;
+                return `${month}: $${total.toFixed(0)}`;
               },
             },
           },
