@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #0A5EB0;
+        }
+        .header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #777;
+        }
+        .content {
+            margin: 20px 0;
+        }
+        .content table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .content table th,
+        .content table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .content table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+        .sum-price {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: right;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+<div class="email-container">
+    <div class="header">
+        <h1>Thông Tin Thanh Toán</h1>
+        <p>Ngày gửi: {{.Date}}</p>
+    </div>
+    <div class="content">
+        <p>Kính gửi Quý khách,</p>
+        <p>Dưới đây là thông tin các dịch vụ thanh toán:</p>
+        <table>
+            <thead>
+            <tr>
+                <th>Mã Dịch Vụ</th>
+                <th>Tên Dịch Vụ</th>
+                <th>Số Tiền</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tbody>
+            {{range .Service}}
+            <tr>
+                <td>{{.ServiceId}}</td>
+                <td>{{.ServiceName}}</td>
+                <td>{{.Price}}</td>
+            </tr>
+            {{end}}
+            </tbody>
+            </tbody>
+        </table>
+    </div>
+    <div><p class="sum-price">Tổng tiền: {{.Money}} VNĐ</p></div>
+    <div class="footer">
+        <p>Email này được gửi từ hệ thống tự động. Vui lòng không trả lời trực tiếp email này.</p>
+    </div>
+</div>
+</body>
+</html>

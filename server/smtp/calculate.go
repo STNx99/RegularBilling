@@ -12,14 +12,20 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func CreateNewBill(total float32, userId primitive.ObjectID) *models.Bill{
+type ServiceInfo struct {
+	ServiceId   string
+	ServiceName string
+	Price       float64
+}
+
+func CreateNewBill(total float32, userId primitive.ObjectID) *models.Bill {
 	return &models.Bill{
-		BillId: primitive.NewObjectID(),
-		BillName: "Payment",
-		UserId: userId,
-		Price: float64(total),
-		Paid: true,
-		Expired: time.Now().Add(time.Hour * 72),
+		BillId:    primitive.NewObjectID(),
+		BillName:  "Payment",
+		UserId:    userId,
+		Price:     float64(total),
+		Paid:      true,
+		Expired:   time.Now().Add(time.Hour * 72),
 		CreatedAt: time.Now(),
 	}
 }
@@ -34,29 +40,41 @@ func CalculateUserBill(store *MongoStore) {
 	}
 	for _, user := range users {
 		var total float32
-		if len(user.ServiceIds) == 0{
+		if len(user.ServiceIds) == 0 {
 			continue
 		}
 
 		wg.Add(1)
-		go func(){
+
+		var data []ServiceInfo
+
+		go func() {
 			defer wg.Done()
 			//Calculate user service totals
-			for _, service :=  range user.ServiceIds{
+			for _, service := range user.ServiceIds {
 				total += service.Price
+
+				var serviceInfo ServiceInfo
+				serviceInfo.ServiceId = service.ServiceId.Hex()
+				serviceInfo.ServiceName = service.ServiceName
+				serviceInfo.Price = float64(service.Price)
+
+				infos := append(data, serviceInfo)
+				data = infos
 			}
+
 			newBill := CreateNewBill(total, user.UserId)
 			err := userDB.UpdateUserBill(user.UserName, *newBill)
-			if err != nil{
+			if err != nil {
 				fmt.Errorf("Error updating user %s bill", newBill.UserId)
 			}
 			err = billDB.CreateBill(*newBill)
-			if err != nil{
+			if err != nil {
 				fmt.Errorf("Error creating bill for %s", newBill.UserId)
 			}
 			//Send mail to the user
-			err = SendMail([]string{user.Email}, total)
-			if err != nil{
+			err = SendMail([]string{user.Email}, float64(total), data)
+			if err != nil {
 				fmt.Errorf("Error sending mail for %s", newBill.UserId)
 			}
 		}()

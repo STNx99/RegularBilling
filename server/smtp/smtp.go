@@ -1,12 +1,22 @@
 package smtp
 
 import (
-	"fmt"
+	"bytes"
+	"github.com/dustin/go-humanize"
+	"html/template"
+	"log"
 	"net/smtp"
 	"os"
+	"time"
 )
 
-func SendMail(to []string, money float32) error {
+type EmailData struct {
+	Date    string
+	Service []ServiceInfo
+	Money   string
+}
+
+func SendMail(to []string, money float64, service []ServiceInfo) error {
 	auth := smtp.PlainAuth(
 		"",
 		os.Getenv("SMTP_MAIL"),
@@ -14,8 +24,30 @@ func SendMail(to []string, money float32) error {
 		os.Getenv("SMTP_HOST"),
 	)
 
-msg := []byte(fmt.Sprintf("To: %s\r\n"+ "Subject: Monthly Services Bill\r\n"+ "\r\n"+ "Your monthly services bill is: %.2f\r\n", to[0], money))
-err := smtp.SendMail(
+	now := time.Now()
+
+	var data = EmailData{
+		Date:    now.Format("15:04:05 02/01/2006"),
+		Service: service,
+		Money:   humanize.Comma(int64(money)),
+	}
+	tmpl, err := template.ParseFiles("template.html")
+	if err != nil {
+		log.Fatalf("Không thể đọc template: %v", err)
+	}
+
+	var body bytes.Buffer
+	if err := tmpl.Execute(&body, data); err != nil {
+		log.Fatalf("Không thể render template: %v", err)
+	}
+
+	msg := []byte(
+		"Subject: Thông Tin Thanh Toán\r\n" +
+			"Content-Type: text/html; charset=\"UTF-8\"\r\n\r\n" +
+			body.String(),
+	)
+
+	err = smtp.SendMail(
 		"smtp.gmail.com:587",
 		auth,
 		os.Getenv("SMTP_MAIL"),
@@ -23,7 +55,9 @@ err := smtp.SendMail(
 		msg,
 	)
 	if err != nil {
-		return err
+		log.Fatalf("Lỗi khi gửi email: %v", err)
 	}
+
+	log.Println("Email đã được gửi thành công!")
 	return nil
 }
