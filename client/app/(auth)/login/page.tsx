@@ -131,7 +131,7 @@ export default function Login() {
               type="submit"
               className="w-full bg-blue-300 text-white font-bold py-2 rounded-md hover:bg-blue-600"
             >
-              Login
+              Login 
             </button>
             <Link href="/signup">
               <p className="text-sm mt-4 text-center text-blue-700 underline">

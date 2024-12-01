@@ -1,8 +1,35 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const Navbar: React.FC = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+  const backendUrl = "http://localhost:8080/v1";
+
+  const handleLogOut = async (): Promise<void> => {
+    try {
+      const response = await fetch(`${backendUrl}/user/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP status ${response.status}`);
+      }
+
+      router.push("/login");
+    } catch (error) {
+      console.log("Error : ", error);
+      alert("Loi dang xuat");
+    }
+  };
 
   return (
     <nav className="bg-white-500 w-full rounded-lg border-2">
@@ -66,13 +93,31 @@ const Navbar: React.FC = () => {
           </button>
 
           <div className="relative ml-3">
-            <button className="flex text-sm rounded-full bg-blue-300 p-1 mr-5">
+            <button 
+              className="flex text-sm rounded-full bg-blue-300 p-1 mr-5"
+              onClick={toggleMenu}>
               <img
                 className="h-8 w-8  rounded-full"
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                src="https://cdn-icons-png.flaticon.com/512/1698/1698743.png"
                 alt="User"
               />
             </button>
+            {isMenuOpen && (
+              <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg z-10">
+              <button 
+                className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-blue-100"
+                onClick={() => alert("Cài đặt")}
+              >
+                Cài đặt
+              </button>
+              <button
+                className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-blue-100"
+                onClick={() => handleLogOut()}
+              >
+                Logout
+              </button>
+        </div>
+      )}
           </div>
         </div>
       </div>
