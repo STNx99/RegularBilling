@@ -44,15 +44,7 @@ func (h *Handler) Add(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid input:"+err.Error(), http.StatusBadRequest)
 		return
 	}
-	// newService, err := h.serviceStore.FindService(service)
-	// if newService == (models.Service{}) {
-	// 	http.Error(w, err.Error(), http.StatusNotFound)
-	// 	return
-	// }
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusNotFound)
-	// 	return
-	// }
+
 	err = h.userStore.AddUserServices(service.UserId, service.Service)
 	if err != nil {
 		http.Error(w, "Error adding service"+err.Error(), http.StatusInternalServerError)
@@ -85,7 +77,6 @@ func (h *Handler) FindUserService(w http.ResponseWriter, r *http.Request) {
 	}
 	user := models.User{UserName: username}
 
-
 	services, err := h.userStore.FindUserServices(&user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -96,9 +87,14 @@ func (h *Handler) FindUserService(w http.ResponseWriter, r *http.Request) {
 		services = []models.Service{}
 	}
 
+	total := CalculateServiceTotal(services)
+	servicesData := models.ServicesData{
+		Services:     services,
+		ServiceTotal: total,
+	}
 	w.Header().Set("Content-Type", "application/json")
 
-	err = json.NewEncoder(w).Encode(services)
+	err = json.NewEncoder(w).Encode(&servicesData)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

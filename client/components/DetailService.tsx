@@ -8,12 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Service } from "@/types/type";
+import { Service, ServiceData } from "@/types/type";
 import { useEffect, useState } from "react";
 
 export function DetailService() {
   const backendUrl = "http://localhost:8080/v1/service/";
-  const [services, setServices] = useState<Service[]>([]); 
+  const [serviceData, setServiceData] = useState<ServiceData>(); 
   const handleGetService = async(): Promise<void> => {
     try {
       const respones = await fetch(`${backendUrl}`,{
@@ -25,7 +25,7 @@ export function DetailService() {
       console.log(data);
       if(data){
         console.log(data);
-        setServices(data);
+        setServiceData(data);
       }
 
 
@@ -51,7 +51,7 @@ export function DetailService() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {services.map((service,index) => (
+        {serviceData?.Services.map((service,index) => (
           <TableRow key={service.ServiceId.toString()}>
             <TableCell className="font-medium">{index+1}</TableCell>
             <TableCell>{service.ServiceName}</TableCell>
@@ -63,8 +63,8 @@ export function DetailService() {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
+          <TableCell colSpan={3} className="font-bold">Service Total</TableCell>
+          <TableCell className="text-right">{serviceData?.ServiceTotal}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>

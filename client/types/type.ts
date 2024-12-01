@@ -23,14 +23,19 @@ export type Service = {
 export type Bill = {
   BillId: ObjectId;
   BillName: string;
-  UserId: string;
   Price: number;
   Paid: boolean;
   Expired: Date;
+  UserId: string;
   CreatedAt: Date;
 };
 
 export type BillData = {
   Bills: Bill[]
   YearTotal: number
+}
+
+export type ServiceData = {
+  ServiceTotal: number
+  Services: Service[]
 }

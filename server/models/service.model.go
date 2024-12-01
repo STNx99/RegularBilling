@@ -15,11 +15,16 @@ type Service struct {
 }
 
 type AddUserService struct {
-	UserId     primitive.ObjectID `bson:"_id"`
-	Service  Service
+	UserId  primitive.ObjectID `bson:"_id"`
+	Service Service
 }
 
 type DeleteUserService struct {
-	UserId     primitive.ObjectID `bson:"_id"`
-	Service  Service
+	UserId  primitive.ObjectID `bson:"_id"`
+	Service Service
+}
+
+type ServicesData struct {
+	Services []Service
+	ServiceTotal float32 `bson:"total"`
 }
