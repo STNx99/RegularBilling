@@ -45,7 +45,7 @@ func main() {
 	)
 	v1 := http.NewServeMux()
 	v1.Handle("/v1/user/", middleware.Logging(http.StripPrefix("/v1", routes.UserRoutes(userStore))))
-	v1.Handle("/v1/service/", stack(http.StripPrefix("/v1", routes.ServiceRoutes(serviceStore, userStore))))
+	v1.Handle("/v1/service/", middleware.Logging(http.StripPrefix("/v1", routes.ServiceRoutes(serviceStore, userStore))))
 	v1.Handle("/v1/bill/", stack(http.StripPrefix("/v1", routes.BillRoutes(userStore))))
 
 	//middle ware stack

@@ -7,24 +7,24 @@ import (
 )
 
 type Service struct {
-	ServiceId   primitive.ObjectID `bson:"_id"`
-	ServiceName string             `bson:"service_name"`
-	Price       float32            `bson:"price"`
-	CreatedAt   time.Time          `bson:"created_at"`
-	ExpireAt    time.Time          `bson:"expire_at"`
+	ServiceId   primitive.ObjectID `json:"_id" bson:"_id"`
+	ServiceName string             `json:"service_name" bson:"service_name"`
+	Price       float32            `json:"price" bson:"price"`
+	CreatedAt   time.Time          `json:"created_at" bson:"created_at"`
+	ExpireAt    time.Time          `json:"expire_at" bson:"expire_at"`
 }
 
 type AddUserService struct {
-	UserId  primitive.ObjectID `bson:"_id"`
-	Service Service
+	UserId  primitive.ObjectID `json:"user_id" bson:"user_id"`
+	Service Service            `json:"service" bson:"service"`
 }
 
 type DeleteUserService struct {
-	UserId  primitive.ObjectID `bson:"_id"`
-	Service Service
+	UserId  primitive.ObjectID `json:"user_id" bson:"user_id"`
+	Service Service            `json:"service" bson:"service"`
 }
 
 type ServicesData struct {
-	Services []Service
+	Services     []Service
 	ServiceTotal float32 `bson:"total"`
 }

@@ -3,11 +3,13 @@ package service
 import (
 	"server/models"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func CreateNewService(s *models.Service) *models.Service {
 	return &models.Service{
-		ServiceId:   s.ServiceId,
+		ServiceId:   primitive.NewObjectID(),
 		ServiceName: s.ServiceName,
 		Price:       s.Price,
 		CreatedAt:   time.Now(),

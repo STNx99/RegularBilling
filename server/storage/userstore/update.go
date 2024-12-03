@@ -2,6 +2,7 @@ package userstore
 
 import (
 	"context"
+	"log"
 	"server/models"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -9,6 +10,8 @@ import (
 )
 
 func (m *MongoStore) AddUserServices(userId primitive.ObjectID, service models.Service) error {
+	log.Println(userId)
+	log.Println(service)
 	_, err := m.db.Collection("users").UpdateOne(
 		context.TODO(),
 		bson.M{"_id": userId},

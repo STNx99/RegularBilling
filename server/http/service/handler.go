@@ -44,7 +44,6 @@ func (h *Handler) Add(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid input:"+err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	err = h.userStore.AddUserServices(service.UserId, service.Service)
 	if err != nil {
 		http.Error(w, "Error adding service"+err.Error(), http.StatusInternalServerError)
